@@ -1,4 +1,4 @@
-// functions/analyzeRoof.js
+// functions/roof-analysis.js
 // Simulated AI roof analysis from satellite imagery based on address.
 // In production, this is where you'd call your real vision/AI pipeline.
 
@@ -7,8 +7,7 @@ export default {
     const url = new URL(request.url);
     const address = url.searchParams.get("address") || "Unknown address";
 
-    // You can make this deterministic or random-ish based on address hash.
-    // For now, we return a realistic, static "AI" payload.
+    // Realistic AI-style payload
     const body = JSON.stringify({
       address,
       // Core sizing + economics
