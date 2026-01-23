@@ -1,4 +1,6 @@
 // js/views/quoteSubmission.js
+// Roofer quote submission with full AI roof details surfaced
+
 import { createButton, createInputGroup, createCard } from "../uiComponents.js";
 import { navigate } from "../router.js";
 
@@ -11,6 +13,8 @@ export async function renderQuoteSubmissionView({ root, params }) {
     return;
   }
 
+  const a = lead.analysis;
+
   const container = document.createElement("section");
   container.className = "intake-wizard";
 
@@ -22,13 +26,16 @@ export async function renderQuoteSubmissionView({ root, params }) {
     subtext: lead.address,
     variant: "light",
     content: [
-      metric("Roof area", `${lead.analysis.areaSqFt} sq ft`),
-      metric("Pitch", lead.analysis.pitchLabel),
-      metric("Complexity", lead.analysis.complexity),
-      metric("Condition score", `${lead.analysis.conditionScore}/100`),
+      metric("Estimated roof area", `${a.areaSqFt} sq ft`),
+      metric("Estimated pitch", a.pitchLabel),
+      metric("AI roof material", a.roofMaterialType),
+      metric("Peaks & valleys", a.peaksValleysDescription),
+      metric("Goosenecks (vents)", a.goosenecksCount),
+      metric("Complexity", a.complexity),
+      metric("Condition score", `${a.conditionScore}/100`),
       metric(
-        "AI estimated range",
-        `$${lead.analysis.estimateLow} – $${lead.analysis.estimateHigh}`
+        "AI estimated replacement range",
+        `$${a.estimateLow} – $${a.estimateHigh}`
       )
     ]
   });
@@ -39,7 +46,7 @@ export async function renderQuoteSubmissionView({ root, params }) {
     label: "Quote price",
     name: "price",
     type: "number",
-    placeholder: lead.analysis.estimateLow.toString(),
+    placeholder: a.estimateLow.toString(),
     variant: "light"
   });
 
