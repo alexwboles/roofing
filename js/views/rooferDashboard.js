@@ -1,4 +1,6 @@
 // js/views/rooferDashboard.js
+// Roofer dashboard showing AI-derived roof details for each lead
+
 import { createButton, createCard } from "../uiComponents.js";
 
 export async function renderRooferDashboardView({ root }) {
@@ -10,6 +12,7 @@ export async function renderRooferDashboardView({ root }) {
   const title = document.createElement("h1");
   title.textContent = "Roofer Dashboard";
 
+  // Leads would normally come from backend
   const leads = [
     {
       id: "lead123",
@@ -17,8 +20,11 @@ export async function renderRooferDashboardView({ root }) {
       address: "123 Main St, St Augustine, FL",
       analysis: {
         areaSqFt: 2450,
-        pitchLabel: "6/12",
-        complexity: "Gable",
+        pitchLabel: "6/12 (approx. 26.6°)",
+        roofMaterialType: "Asphalt shingle (architectural)",
+        peaksValleysDescription: "Primary ridge with 4 major valleys",
+        goosenecksCount: 5,
+        complexity: "Gable with minor hips",
         conditionScore: 82,
         estimateLow: 13500,
         estimateHigh: 17200
@@ -30,18 +36,23 @@ export async function renderRooferDashboardView({ root }) {
   list.className = "project-list";
 
   leads.forEach((lead) => {
+    const a = lead.analysis;
+
     const card = createCard({
       title: lead.homeowner,
       subtext: lead.address,
       variant: "light",
       content: [
-        metric("Roof area", `${lead.analysis.areaSqFt} sq ft`),
-        metric("Pitch", lead.analysis.pitchLabel),
-        metric("Complexity", lead.analysis.complexity),
-        metric("Condition score", `${lead.analysis.conditionScore}/100`),
+        metric("Estimated roof area", `${a.areaSqFt} sq ft`),
+        metric("Estimated pitch", a.pitchLabel),
+        metric("AI roof material", a.roofMaterialType),
+        metric("Peaks & valleys", a.peaksValleysDescription),
+        metric("Goosenecks (vents)", a.goosenecksCount),
+        metric("Complexity", a.complexity),
+        metric("Condition score", `${a.conditionScore}/100`),
         metric(
-          "AI estimated range",
-          `$${lead.analysis.estimateLow} – $${lead.analysis.estimateHigh}`
+          "AI estimated replacement range",
+          `$${a.estimateLow} – $${a.estimateHigh}`
         ),
         createButton({
           label: "Create Quote",
