@@ -1,4 +1,6 @@
 // js/views/homeownerDashboard.js
+// Homeowner dashboard with full AI roof details surfaced
+
 import { createCard, createButton, createMetricRow } from "../uiComponents.js";
 import { navigate } from "../router.js";
 
@@ -21,14 +23,20 @@ export async function renderHomeownerDashboardView({ root }) {
     address = parsed.address;
   }
 
+  /* ---------------------------------------------
+     AI Roof Report Card
+  --------------------------------------------- */
   const roofCard = createCard({
     title: "Your AI Roof Report",
     subtext: address || "No report available",
     variant: "light",
     content: analysis
       ? [
-          createMetricRow("Roof area", `${analysis.areaSqFt} sq ft`),
-          createMetricRow("Pitch", analysis.pitchLabel),
+          createMetricRow("Estimated roof area", `${analysis.areaSqFt} sq ft`),
+          createMetricRow("Estimated pitch", analysis.pitchLabel),
+          createMetricRow("AI roof material", analysis.roofMaterialType),
+          createMetricRow("Peaks & valleys", analysis.peaksValleysDescription),
+          createMetricRow("Goosenecks (vents)", analysis.goosenecksCount),
           createMetricRow("Complexity", analysis.complexity),
           createMetricRow("Condition score", `${analysis.conditionScore}/100`),
           createMetricRow(
@@ -52,6 +60,9 @@ export async function renderHomeownerDashboardView({ root }) {
 
   left.appendChild(roofCard);
 
+  /* ---------------------------------------------
+     Quotes Overview
+  --------------------------------------------- */
   const quotesCard = createCard({
     title: "Your Quotes",
     variant: "light",
