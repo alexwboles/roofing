@@ -1,8 +1,14 @@
 // js/views/projectDashboard.js
-import { createCard, createButton } from "../uiComponents.js";
+// Project detail dashboard with AI roof details surfaced
+
+import { createCard, createButton, createMetricRow } from "../uiComponents.js";
 
 export async function renderProjectDashboardView({ root }) {
   root.innerHTML = "";
+
+  const stored = sessionStorage.getItem("roofAnalysis");
+  const analysis = stored ? JSON.parse(stored).analysis : null;
+  const address = stored ? JSON.parse(stored).address : "";
 
   const container = document.createElement("section");
   container.className = "intake-wizard";
@@ -10,25 +16,28 @@ export async function renderProjectDashboardView({ root }) {
   const title = document.createElement("h1");
   title.textContent = "Project Dashboard";
 
+  /* ---------------------------------------------
+     Project Info (placeholder)
+  --------------------------------------------- */
   const project = {
     id: "proj123",
     homeowner: "John Smith",
-    address: "123 Main St, St Augustine, FL",
+    address,
     roofer: "Sunshine Roofing",
     status: "Scheduled",
     startDate: "Feb 12, 2026",
     notes: "Permit approved. Materials ordered."
   };
 
-  const card = createCard({
+  const projectCard = createCard({
     title: project.homeowner,
     subtext: project.address,
     variant: "light",
     content: [
-      row("Roofer", project.roofer),
-      row("Status", project.status),
-      row("Start date", project.startDate),
-      row("Notes", project.notes),
+      createMetricRow("Roofer", project.roofer),
+      createMetricRow("Status", project.status),
+      createMetricRow("Start date", project.startDate),
+      createMetricRow("Notes", project.notes),
       createButton({
         label: "Update Status",
         variant: "primary",
@@ -37,22 +46,34 @@ export async function renderProjectDashboardView({ root }) {
     ]
   });
 
-  container.append(title, card);
+  container.append(projectCard);
+
+  /* ---------------------------------------------
+     AI Roof Details Card
+  --------------------------------------------- */
+  if (analysis) {
+    const aiCard = createCard({
+      title: "AI Roof Details",
+      variant: "light",
+      content: [
+        createMetricRow("Estimated roof area", `${analysis.areaSqFt} sq ft`),
+        createMetricRow("Estimated pitch", analysis.pitchLabel),
+        createMetricRow("AI roof material", analysis.roofMaterialType),
+        createMetricRow("Peaks & valleys", analysis.peaksValleysDescription),
+        createMetricRow("Goosenecks (vents)", analysis.goosenecksCount),
+        createMetricRow("Complexity", analysis.complexity),
+        createMetricRow("Condition score", `${analysis.conditionScore}/100`),
+        createMetricRow(
+          "Estimated replacement range",
+          `$${analysis.estimateLow} – $${analysis.estimateHigh}`
+        )
+      ]
+    });
+
+    container.append(aiCard);
+  }
+
   root.appendChild(container);
-}
-
-function row(label, value) {
-  const r = document.createElement("div");
-  r.className = "card-row";
-
-  const l = document.createElement("span");
-  l.textContent = label;
-
-  const v = document.createElement("strong");
-  v.textContent = value;
-
-  r.append(l, v);
-  return r;
 }
 
 export const renderView = renderProjectDashboardView;
