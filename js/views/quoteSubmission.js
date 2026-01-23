@@ -1,6 +1,4 @@
 // js/views/quoteSubmission.js
-// Roofer quote submission with full AI roof details surfaced
-
 import { createButton, createInputGroup, createCard } from "../uiComponents.js";
 import { navigate } from "../router.js";
 
