@@ -1,6 +1,13 @@
 // js/views/quoteComparison.js
+// LendingTree-style quote comparison with AI roof details surfaced
+
+import { createCard, createMetricRow } from "../uiComponents.js";
+
 export async function renderQuoteComparisonView({ root }) {
   root.innerHTML = "";
+
+  const stored = sessionStorage.getItem("roofAnalysis");
+  const analysis = stored ? JSON.parse(stored).analysis : null;
 
   const container = document.createElement("section");
   container.className = "intake-wizard";
@@ -10,8 +17,36 @@ export async function renderQuoteComparisonView({ root }) {
 
   const subtitle = document.createElement("p");
   subtitle.textContent =
-    "We’ve matched you with local roofers. Compare price, timeline, and warranty to choose the best fit.";
+    "We’ve matched you with local roofers. Compare price, timeline, warranty, and AI‑derived roof details.";
 
+  /* ---------------------------------------------
+     AI Roof Snapshot (top of comparison page)
+  --------------------------------------------- */
+  if (analysis) {
+    const aiCard = createCard({
+      title: "AI Roof Snapshot",
+      variant: "light",
+      content: [
+        createMetricRow("Estimated roof area", `${analysis.areaSqFt} sq ft`),
+        createMetricRow("Estimated pitch", analysis.pitchLabel),
+        createMetricRow("AI roof material", analysis.roofMaterialType),
+        createMetricRow("Peaks & valleys", analysis.peaksValleysDescription),
+        createMetricRow("Goosenecks (vents)", analysis.goosenecksCount),
+        createMetricRow("Complexity", analysis.complexity),
+        createMetricRow("Condition score", `${analysis.conditionScore}/100`),
+        createMetricRow(
+          "Estimated replacement range",
+          `$${analysis.estimateLow} – $${analysis.estimateHigh}`
+        )
+      ]
+    });
+
+    container.append(aiCard);
+  }
+
+  /* ---------------------------------------------
+     Quotes Table
+  --------------------------------------------- */
   const table = document.createElement("div");
   table.className = "quote-table";
 
