@@ -28,20 +28,16 @@ export async function renderAnalysisView({ root }) {
   const title = document.createElement("h1");
   title.textContent = "We analyzed your roof";
 
-  // AI roof snapshot (from satellite imagery)
-  const summaryCard = createCard({
+  const aiCard = createCard({
     title: "AI Roof Snapshot",
     subtext: address,
     variant: "light",
     content: [
       createMetricRow("Estimated roof area", `${analysis.areaSqFt} sq ft`),
       createMetricRow("Estimated pitch", analysis.pitchLabel),
-      createMetricRow("Roof material (AI guess)", analysis.roofMaterialType),
+      createMetricRow("AI roof material", analysis.roofMaterialType),
       createMetricRow("Peaks & valleys", analysis.peaksValleysDescription),
-      createMetricRow(
-        "Estimated number of goosenecks",
-        String(analysis.goosenecksCount)
-      ),
+      createMetricRow("Goosenecks (vents)", analysis.goosenecksCount),
       createMetricRow("Complexity", analysis.complexity),
       createMetricRow("Condition score", `${analysis.conditionScore}/100`),
       createMetricRow(
@@ -51,19 +47,15 @@ export async function renderAnalysisView({ root }) {
     ]
   });
 
-  // Homeowner preferences from intake
   const prefsCard = createCard({
     title: "Your project preferences",
     variant: "light",
     content: [
       createMetricRow("Wanted roof type", wantedRoofType || "Not specified"),
       createMetricRow("Current roof type", currentRoofType || "Not specified"),
+      createMetricRow("New or existing", newOrExisting || "Not specified"),
       createMetricRow(
-        "New or existing structure",
-        newOrExisting || "Not specified"
-      ),
-      createMetricRow(
-        "Preferred payment method",
+        "Payment method",
         paymentMethod ? paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1) : "Not specified"
       ),
       createMetricRow("Email", email || "Not provided"),
@@ -77,7 +69,7 @@ export async function renderAnalysisView({ root }) {
     onClick: () => navigate("/quotes")
   });
 
-  container.append(title, summaryCard, prefsCard, cta);
+  container.append(title, aiCard, prefsCard, cta);
   root.appendChild(container);
 }
 
