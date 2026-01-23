@@ -1,6 +1,4 @@
 // js/views/rooferDashboard.js
-// Roofer dashboard showing AI-derived roof details for each lead
-
 import { createButton, createCard } from "../uiComponents.js";
 
 export async function renderRooferDashboardView({ root }) {
@@ -12,7 +10,6 @@ export async function renderRooferDashboardView({ root }) {
   const title = document.createElement("h1");
   title.textContent = "Roofer Dashboard";
 
-  // Leads would normally come from backend
   const leads = [
     {
       id: "lead123",
