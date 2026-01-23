@@ -1,6 +1,4 @@
 // js/views/quoteComparison.js
-// LendingTree-style quote comparison with AI roof details surfaced
-
 import { createCard, createMetricRow } from "../uiComponents.js";
 
 export async function renderQuoteComparisonView({ root }) {
@@ -17,11 +15,8 @@ export async function renderQuoteComparisonView({ root }) {
 
   const subtitle = document.createElement("p");
   subtitle.textContent =
-    "We’ve matched you with local roofers. Compare price, timeline, warranty, and AI‑derived roof details.";
+    "Compare price, timeline, warranty, and AI‑derived roof details.";
 
-  /* ---------------------------------------------
-     AI Roof Snapshot (top of comparison page)
-  --------------------------------------------- */
   if (analysis) {
     const aiCard = createCard({
       title: "AI Roof Snapshot",
@@ -44,9 +39,6 @@ export async function renderQuoteComparisonView({ root }) {
     container.append(aiCard);
   }
 
-  /* ---------------------------------------------
-     Quotes Table
-  --------------------------------------------- */
   const table = document.createElement("div");
   table.className = "quote-table";
 
